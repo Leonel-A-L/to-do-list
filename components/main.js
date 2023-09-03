@@ -23,13 +23,24 @@ const initApp = () => {
             const confirmed = confirm("Do you want to clear the list?");
             if (confirmed) {
                 toDoList.clearList();
-                updatePersistentData(toDoList.getList());
+                updatePersistentData(toDoList.getList());  
                 refreshThePage();
             }
         }
     })
 
+    loadListObject()
     refreshThePage();
+}
+
+const loadListObject = () => {
+    const storedList = localStorage.getItem('myToDoList');
+    if (typeof storedList !== "string") return;
+    const parsedList = JSON.parse(storedList);
+    parsedList.forEach(itemObj => {
+        const newToDoItem = createNewItem(itemObj._id, itemObj._item);
+        toDoList.addItemToList(newToDoItem)
+    })
 }
 
 const refreshThePage = () => {
@@ -82,7 +93,7 @@ const addClickListenerToCheckBox = (checkbox) => {
         updatePersistentData(toDoList.getList());
         setTimeout(() => {
             refreshThePage();
-        }, 1000);
+        }, 1500);
     });
 };
 
